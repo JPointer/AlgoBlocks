@@ -20,7 +20,7 @@ parameterList : 'int' Name (',' 'int' Name)*;
 mainFunc : mainAnn 'int' 'main' '(' ')' '{' (statementList)? returnStmt '}';
 
 whileStmt : whileAnn 'while' '(' orExpr ')' '{' (statementList)? '}';
-ifStmt : ifAnn 'if' '(' orExpr ')' '{' (statementList)? '}' ('else' '{' (statementList)? '}')?;
+ifStmt : ifAnn 'if' '(' orExpr ')' '{' (trueList= statementList)? '}' ('else' '{' (elseList= statementList)? '}')?;
 declarationStmt : declAnn 'int' Name ('=' orExpr)? ';';
 returnStmt : retAnn 'return' orExpr ';';
 assignmentStmt : assignAnn Name '=' orExpr ';';
@@ -48,7 +48,7 @@ pVal : 'p' '=' Int;
 
 orExpr : andExpr ('||' andExpr)*;
 andExpr : notExpr ('&&' notExpr)*;
-notExpr : '!' notExpr | eqExpr;
+notExpr : '!' eqExpr |eqExpr;
 eqExpr : relExpr (EqOp relExpr)?;
 relExpr : addExpr (RelOp addExpr)?;
 addExpr : mulExpr (AddOp mulExpr)*;

@@ -1,3 +1,5 @@
+package com.algoBlocks.interpreter;
+
 import com.algoBlocks.listeners.ProgramListener;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CharStream;
@@ -8,8 +10,9 @@ import parser.AlgoBlocksParser;
 
 import java.io.IOException;
 
-public class Main {
-    public static void main(String[] strs) {
+public class Interpreter {
+
+    public void parserTest() {
         CharStream stream = null;
         try{
             stream =new ANTLRFileStream("test/test3.c");
@@ -21,6 +24,9 @@ public class Main {
         AlgoBlocksParser parser = new AlgoBlocksParser(tokens);
         AlgoBlocksParser.ProgramContext tree = parser.program();
 
-        ParseTreeWalker.DEFAULT.walk(new ProgramListener(), tree);
-    }//to main
-}//to Main
+        ProgramListener programListener = new ProgramListener();
+        ParseTreeWalker.DEFAULT.walk(programListener, tree);
+
+        System.out.println(programListener.getAst().toString());
+    }
+}
