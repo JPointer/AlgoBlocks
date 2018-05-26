@@ -23,4 +23,8 @@ public class IntAtom extends Node {
     public ArrayList<? extends Node> getChildren() {
         return super.getChildren();
     }
+
+    public int getValue() {
+        return value;
+    }
 }

@@ -37,4 +37,20 @@ public class WhileStmt extends Node {
             list.addAll(whileNodes);
         return list;
     }
+
+    public BlockMeta getBlockMetaWhile() {
+        return blockMetaWhile;
+    }
+
+    public BlockMeta getBlockMetaWhileOp() {
+        return blockMetaWhileOp;
+    }
+
+    public Node getCondition() {
+        return condition;
+    }
+
+    public ArrayList<Node> getWhileNodes() {
+        return whileNodes;
+    }
 }

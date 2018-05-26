@@ -23,4 +23,8 @@ public class MulExpr extends Node {
     public ArrayList<? extends Node> getChildren() {
         return operands.stream().map(MulOperand::getOperand).collect(Collectors.toCollection(ArrayList::new));
     }
+
+    public ArrayList<MulOperand> getOperands() {
+        return operands;
+    }
 }

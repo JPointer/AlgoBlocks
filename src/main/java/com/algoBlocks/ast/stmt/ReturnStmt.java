@@ -27,4 +27,12 @@ public class ReturnStmt extends Node {
         list.add(ret);
         return list;
     }
+
+    public BlockMeta getBlockMeta() {
+        return blockMeta;
+    }
+
+    public Node getRet() {
+        return ret;
+    }
 }

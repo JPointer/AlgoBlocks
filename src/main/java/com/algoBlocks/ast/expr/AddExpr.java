@@ -23,4 +23,8 @@ public class AddExpr extends Node {
     public ArrayList<? extends Node> getChildren() {
         return operands.stream().map(AddOperand::getOperand).collect(Collectors.toCollection(ArrayList::new));
     }
+
+    public ArrayList<AddOperand> getOperands() {
+        return operands;
+    }
 }

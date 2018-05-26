@@ -31,4 +31,16 @@ public class AssignmentStmt extends Node {
         list.add(expr);
         return list;
     }
+
+    public BlockMeta getBlockMeta() {
+        return blockMeta;
+    }
+
+    public String getVarName() {
+        return varName;
+    }
+
+    public Node getExpr() {
+        return expr;
+    }
 }

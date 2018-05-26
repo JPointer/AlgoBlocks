@@ -29,4 +29,16 @@ public class RelExpr extends Node {
         list.add(right);
         return list;
     }
+
+    public Node getLeft() {
+        return left;
+    }
+
+    public Node getRight() {
+        return right;
+    }
+
+    public RelOp getRelOp() {
+        return relOp;
+    }
 }

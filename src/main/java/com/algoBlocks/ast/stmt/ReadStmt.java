@@ -27,4 +27,12 @@ public class ReadStmt extends Node {
     public ArrayList<? extends Node> getChildren() {
         return super.getChildren();
     }
+
+    public BlockMeta getBlockMeta() {
+        return blockMeta;
+    }
+
+    public String getVarName() {
+        return varName;
+    }
 }

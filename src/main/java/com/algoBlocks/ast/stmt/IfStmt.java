@@ -46,4 +46,28 @@ public class IfStmt extends Node {
             list.addAll(falseNodes);
         return list;
     }
+
+    public BlockMeta getBlockMetaCondition() {
+        return blockMetaCondition;
+    }
+
+    public Node getCondition() {
+        return condition;
+    }
+
+    public BlockMeta getBlockMetaTrue() {
+        return blockMetaTrue;
+    }
+
+    public ArrayList<Node> getTrueNodes() {
+        return trueNodes;
+    }
+
+    public BlockMeta getBlockMetaFalse() {
+        return blockMetaFalse;
+    }
+
+    public ArrayList<Node> getFalseNodes() {
+        return falseNodes;
+    }
 }

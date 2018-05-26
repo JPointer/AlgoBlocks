@@ -25,6 +25,12 @@ int main(){
     if ( a >3) {
         /* ASSIGN x=1, y=2, w=3, h=4, p=5; */
         a = a +2;
+
+        /* ASSIGN x=1, y=2, w=3, h=4, p=5; */
+        a = a * 3;
+
+        /* ASSIGN x=1, y=2, w=3, h=4, p=5; */
+        a = a /((3 * 4)% 5);
     }
     else {
         /*

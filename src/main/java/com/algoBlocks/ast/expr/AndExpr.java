@@ -21,4 +21,8 @@ public class AndExpr extends Node {
     public ArrayList<? extends Node> getChildren() {
         return operands;
     }
+
+    public ArrayList<Node> getOperands() {
+        return operands;
+    }
 }

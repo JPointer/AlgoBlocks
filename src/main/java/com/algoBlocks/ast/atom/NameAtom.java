@@ -23,4 +23,8 @@ public class NameAtom extends Node {
     public ArrayList<? extends Node> getChildren() {
         return super.getChildren();
     }
+
+    public String getName() {
+        return name;
+    }
 }

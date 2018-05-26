@@ -25,4 +25,12 @@ public class FuncCallAtom extends Node {
     public ArrayList<? extends Node> getChildren() {
         return params;
     }
+
+    public ArrayList<Node> getParams() {
+        return params;
+    }
+
+    public String getFuncName() {
+        return funcName;
+    }
 }

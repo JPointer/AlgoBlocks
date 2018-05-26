@@ -23,4 +23,8 @@ public class NotExpr extends Node {
         list.add(operand);
         return list;
     }
+
+    public Node getOperand() {
+        return operand;
+    }
 }

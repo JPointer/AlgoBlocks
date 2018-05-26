@@ -7,7 +7,7 @@ int func (int a, int b, int a_____awdw) {
 /* FUNC x=0, y=0, w=0, h=0, p=0; */
 int func2 (int a1, int b1, int a111_____awdw) {
     /* RET x=0, y=0, w=0, h=0, p=0; */
-    return a *(-1);git
+    return a *(-1);
 }
 
 /* MAIN x=1, y=2, w=3, h=4, p=5;*/

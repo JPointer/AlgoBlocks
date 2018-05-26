@@ -13,4 +13,8 @@ public class AddOperand {
     }
 
     public Node getOperand() {return operand;}
+
+    public AddOp getAddOp() {
+        return addOp;
+    }
 }

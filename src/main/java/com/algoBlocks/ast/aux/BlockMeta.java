@@ -31,4 +31,28 @@ public class BlockMeta {
                 ", p=" + p +
                 '}';
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getW() {
+        return w;
+    }
+
+    public int getH() {
+        return h;
+    }
+
+    public int getP() {
+        return p;
+    }
 }

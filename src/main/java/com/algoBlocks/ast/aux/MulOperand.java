@@ -13,4 +13,8 @@ public class MulOperand {
     }
 
     public Node getOperand() {return operand;}
+
+    public MulOp getMulOp() {
+        return mulOp;
+    }
 }

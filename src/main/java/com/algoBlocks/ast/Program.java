@@ -20,4 +20,12 @@ public class Program extends Node {
         list.add(mainNode);
         return list;
     }
+
+    public ArrayList<? extends Node> getFunDefs() {
+        return funDefs;
+    }
+
+    public Node getMainNode() {
+        return mainNode;
+    }
 }

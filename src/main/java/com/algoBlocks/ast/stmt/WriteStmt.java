@@ -27,4 +27,12 @@ public class WriteStmt extends Node {
     public ArrayList<? extends Node> getChildren() {
         return super.getChildren();
     }
+
+    public BlockMeta getBlockMeta() {
+        return blockMeta;
+    }
+
+    public ArrayList<String> getVarNames() {
+        return varNames;
+    }
 }

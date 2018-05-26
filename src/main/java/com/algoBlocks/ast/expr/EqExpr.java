@@ -28,4 +28,16 @@ public class EqExpr extends Node {
         list.add(right);
         return list;
     }
+
+    public Node getLeft() {
+        return left;
+    }
+
+    public Node getRight() {
+        return right;
+    }
+
+    public EqOp getEqOp() {
+        return eqOp;
+    }
 }

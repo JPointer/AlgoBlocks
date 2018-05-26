@@ -31,4 +31,16 @@ public class MainNode extends Node {
         list.add(retStmt);
         return list;
     }
+
+    public BlockMeta getBlockMeta() {
+        return blockMeta;
+    }
+
+    public ArrayList<Node> getOperations() {
+        return operations;
+    }
+
+    public Node getRetStmt() {
+        return retStmt;
+    }
 }

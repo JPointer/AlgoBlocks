@@ -38,4 +38,24 @@ public class FunDef extends Node {
         list.add(retStmt);
         return list;
     }
+
+    public BlockMeta getBlockMeta() {
+        return blockMeta;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ArrayList<String> getParams() {
+        return params;
+    }
+
+    public ArrayList<Node> getOperations() {
+        return operations;
+    }
+
+    public Node getRetStmt() {
+        return retStmt;
+    }
 }
