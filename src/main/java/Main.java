@@ -15,7 +15,7 @@ public class Main {
     public static void main(String[] strs) {
         CharStream stream = null;
         try{
-            stream =new ANTLRFileStream("test/test7.c");
+            stream =new ANTLRFileStream("test/test8.c");
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -56,14 +56,14 @@ public class Main {
             return;
         }
         treeToExecute.execute();
-        System.out.println("Next step press 1 ");
-
-        while(true) {
-            num = in.nextInt();
-            if(num != 1)
-                break;
-            System.out.println(treeToExecute.nextStep());
-        }
+//        System.out.println("Next step press 1 ");
+//
+//        while(true) {
+//            num = in.nextInt();
+//            if(num != 1)
+//                break;
+//            System.out.println(treeToExecute.nextStep());
+//        }
 
     }//to main
 }//to Main

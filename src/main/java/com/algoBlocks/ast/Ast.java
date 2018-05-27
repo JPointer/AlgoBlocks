@@ -7,17 +7,13 @@ import com.algoBlocks.ast.aux.*;
 import com.algoBlocks.ast.expr.*;
 import com.algoBlocks.ast.stmt.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.ListIterator;
-import java.util.Stack;
+import java.util.*;
 
 public class Ast {
 
     private Node root;
     private HashMap<String, Integer> funSignatures = new HashMap<>(); /*name of function and number of params*/
-    private ArrayList<String> instruction = new ArrayList<>();
-    private int counter = 0;
+    private Scanner in = new Scanner(System.in);
 
     public Ast(Node root) {
         this.root = root;
@@ -41,8 +37,10 @@ public class Ast {
         return result;
     }//toString
 
-    public String nextStep() {
-        return instruction.get(counter++);
+    private void nextStep() {
+        int n = in.nextInt();
+        if(n != 1)
+            System.exit(1);
     }
 
     public void preExecuting() throws Exception {
@@ -295,13 +293,14 @@ public class Ast {
             stack.push(vars);
 
             BlockMeta meta = ((MainNode) block).getBlockMeta();
-            instruction.add(enterMsg(meta));
+            System.out.println(enterMsg(meta));
+            nextStep();
 
             for(Node n: ((MainNode) block).getOperations())
                 enterBlock(n, stack);
 
             enterBlock(((MainNode) block).getRetStmt(), stack);
-            instruction.add(exitMsg(meta));
+            System.out.println(exitMsg(meta));
 
             stack.pop();
 
@@ -309,24 +308,40 @@ public class Ast {
 
             BlockMeta meta = ((AssignmentStmt) block).getBlockMeta();
 
-            instruction.add(enterMsg(meta));
+            System.out.println(enterMsg(meta));
+            nextStep();
             int a = calculateExpr(((AssignmentStmt) block).getExpr(), stack);
             updateVariable(stack, ((AssignmentStmt) block).getVarName(), a);
-            instruction.add(new String (((AssignmentStmt) block).getVarName() + " = " + a));
-            instruction.add(exitMsg(meta));
+            System.out.println(new String (((AssignmentStmt) block).getVarName() + " = " + a));
+            nextStep();
+            System.out.println(exitMsg(meta));
+            nextStep();
 
         } else if(block instanceof DeclarationStmt) {
 
             BlockMeta meta = ((DeclarationStmt) block).getBlockMeta();
 
-            instruction.add(enterMsg(meta));
-            instruction.add(new String(((DeclarationStmt) block).getVarName()));//TODO calculate expression
+            System.out.println(enterMsg(meta));
+            nextStep();
+
+            String name = ((DeclarationStmt) block).getVarName();
+            Variable newVal = new Variable(name);
+            //calculate expression
+            if(((DeclarationStmt) block).getExpr() == null) {
+                System.out.println(new String(name));
+
+            } else{
+                int a = calculateExpr(((DeclarationStmt) block).getExpr(), stack);
+                System.out.println(new String(name + " = " + a));
+                newVal.setValue(a);
+            }
+            nextStep();
             //variable add to stack
-            Variable newVal = new Variable(((DeclarationStmt) block).getVarName());
             ArrayList<Variable> vars = stack.pop();
             vars.add(newVal);
             stack.push(vars);
-            instruction.add(exitMsg(meta));
+            System.out.println(exitMsg(meta));
+            nextStep();
 
         } else if(block instanceof IfStmt) {
 
@@ -334,35 +349,47 @@ public class Ast {
             BlockMeta falseMeta = ((IfStmt) block).getBlockMetaFalse();
             BlockMeta trueMeta = ((IfStmt) block).getBlockMetaTrue();
 
-            instruction.add(enterMsg(condition));
-
+            System.out.println(enterMsg(condition));
+            nextStep();
             if(true) { //TODO check condition
-                instruction.add(enterMsg(trueMeta));
+                System.out.println(enterMsg(trueMeta));
+                nextStep();
                 for(Node n: ((IfStmt) block).getTrueNodes())
                     enterBlock(n, stack);
-                instruction.add(exitMsg(trueMeta));
+                System.out.println(exitMsg(trueMeta));
+                nextStep();
             } else {
-                instruction.add(enterMsg(falseMeta));
+                System.out.println(enterMsg(falseMeta));
+                nextStep();
                 for(Node n: ((IfStmt) block).getFalseNodes())
                     enterBlock(n, stack);
-                instruction.add(exitMsg(falseMeta));
+                System.out.println(exitMsg(falseMeta));
+                nextStep();
             }
-            instruction.add(exitMsg(condition));
+            System.out.println(exitMsg(condition));
+            nextStep();
 
         } else if(block instanceof ReadStmt) {
 
             BlockMeta meta = ((ReadStmt) block).getBlockMeta();
-            instruction.add(enterMsg(meta));
-            //TODO
-            instruction.add(exitMsg(meta));
+            System.out.println(enterMsg(meta));
+            nextStep();
+            String name = ((ReadStmt) block).getVarName();
+            System.out.println("Give " + name + " value: " );
+            int k = in.nextInt();
+            updateVariable(stack, name, k);
+            System.out.println(exitMsg(meta));
+            nextStep();
 
         } else if(block instanceof ReturnStmt) {
 
             BlockMeta meta = ((ReturnStmt) block).getBlockMeta();
 
-            instruction.add(enterMsg(meta));
-            //TODO
-            instruction.add(exitMsg(meta));
+            System.out.println(enterMsg(meta));
+            nextStep();
+            System.out.println("return value = " + calculateExpr(((ReturnStmt) block).getRet(), stack));
+            System.out.println(exitMsg(meta));
+            nextStep();
 
         } else if(block instanceof WhileStmt) {
 
@@ -378,9 +405,11 @@ public class Ast {
 
             BlockMeta meta = ((WriteStmt) block).getBlockMeta();
 
-            instruction.add(enterMsg(meta));
+            System.out.println(enterMsg(meta));
+            nextStep();
             //TODO
-            instruction.add(exitMsg(meta));
+            System.out.println(exitMsg(meta));
+            nextStep();
 
         } else if(block instanceof FunDef) {
             //TODO
