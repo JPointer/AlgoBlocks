@@ -163,19 +163,21 @@ public class Ast {
         } else if(stmt instanceof  WriteStmt) {
             Stack<ArrayList<String>> temp = new Stack<ArrayList<String>>();
             ArrayList<String> params = ((WriteStmt) stmt).getVarNames();
+            ArrayList<String> paramsTemp = new ArrayList<>(params);
+
             ArrayList<String> vars = null;
             boolean found = false;
             while(found == false) {
                 if(stack.empty()) {
-                    for(String p : params)
+                    for(String p : paramsTemp)
                     throw new Exception("ERROR write: invalid " + p + " variable");
                 }
                 vars = stack.peek();
                 if(vars != null)
-                    for(String s : vars)
-                        if(params.contains(s)) {
-                            params.remove(s);
-                            if(params.isEmpty())
+                    for(String s : params)
+                        if(vars.contains(s)) {
+                            paramsTemp.remove(s);
+                            if(paramsTemp.isEmpty())
                                 found = true;
                         }
                 if(found == false) {
@@ -351,7 +353,7 @@ public class Ast {
 
             System.out.println(enterMsg(condition));
             nextStep();
-            if(true) { //TODO check condition
+            if(calculateExpr(((IfStmt) block).getCondition(),stack) == 1) {
                 System.out.println(enterMsg(trueMeta));
                 nextStep();
                 for(Node n: ((IfStmt) block).getTrueNodes())
@@ -388,6 +390,7 @@ public class Ast {
             System.out.println(enterMsg(meta));
             nextStep();
             System.out.println("return value = " + calculateExpr(((ReturnStmt) block).getRet(), stack));
+            nextStep();
             System.out.println(exitMsg(meta));
             nextStep();
 
@@ -399,7 +402,20 @@ public class Ast {
             Node condition = ((WhileStmt) block).getCondition();
             ArrayList<Node> whileNodes = ((WhileStmt) block).getWhileNodes();
 
-            // TODO
+
+            System.out.println(enterMsg(whileMeta));
+            nextStep();
+            while(calculateExpr(condition,stack) == 1) {
+                System.out.println(enterMsg(whileOpMeta));
+                nextStep();
+                if(whileNodes != null)
+                    for(Node n: whileNodes)
+                        enterBlock(n, stack);
+                System.out.println(exitMsg(whileOpMeta));
+                nextStep();
+            }
+            System.out.println(exitMsg(whileMeta));
+            nextStep();
 
         } else if(block instanceof WriteStmt) {
 
@@ -407,7 +423,12 @@ public class Ast {
 
             System.out.println(enterMsg(meta));
             nextStep();
-            //TODO
+            ArrayList<Variable> variables = getVariablesByName(((WriteStmt) block).getVarNames(), stack);
+
+            for(Variable v: variables)
+                System.out.println("Variable " + v.getName() + " = " + v.getValue());
+
+            nextStep();
             System.out.println(exitMsg(meta));
             nextStep();
 
@@ -590,4 +611,41 @@ public class Ast {
             stack.push(vars);
         }
     } // update variable
+
+    private ArrayList<Variable> getVariablesByName(ArrayList<String> names, Stack<ArrayList<Variable>> stack) {
+        ArrayList<Variable> variables = new ArrayList<Variable>();
+        ArrayList<Variable> temp = null;
+        Stack<ArrayList<Variable>> tempStack = new Stack<>();
+
+        for(String name : names) {
+            boolean found = false;
+            while(!found) {
+
+                if(stack.empty())
+                    break;
+
+                temp = stack.pop();
+                if(temp != null) {
+                    int n = temp.size();
+                    for (int i = 0; i < n; i++ ) {
+                        if (temp.get(i).getName().equals(name)) {
+                            variables.add(new Variable(name, temp.get(i).getValue()));
+                            stack.push(temp);
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                if(!found) {
+                    tempStack.push(temp);
+                }
+
+            }
+            while (!tempStack.empty()) {
+                temp = tempStack.pop();
+                stack.push(temp);
+            }
+        }
+        return variables;
+    }
 }// AST

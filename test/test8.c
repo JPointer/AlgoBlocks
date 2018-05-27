@@ -27,23 +27,30 @@ int main(){
         a = a +2;
     }
     else {
+        /* ASSIGN x=1, y=2, w=3, h=4, p=5; */
+        a = a + 1;
+
         /*
         WHILE x=1, y=2, w=3, h=4, p=5;
         WHILEOP x=1, y=2, w=3, h=4, p=5; */
         while ( a <10 && a < 14) {
             /* ASSIGN x=1, y=2, w=3, h=4, p=5; */
-            a = (a +1)+((a+ 10) - (a * a - 1));
+            a = (a +1)+((a+ 10) + ( a - 1));
+
+            /* WRITE x=1, y=2, w=3, h=4, p=5; */
+            write(a);
+
         }
     }
 
     /* WRITE x=1, y=2, w=3, h=4, p=5; */
-    write(a);
+    write(a , a);
 
     /* DECL x=1, y=2, w=3, h=4, p=5; */
     int b = func(a, a, a) ;
 
     /* WRITE x=1, y=2, w=3, h=4, p=5; */
-    write (b ) ;
+    write (b) ;
 
     /* RET x=1, y=2, w=3, h=4, p=5; */
     return 0;
