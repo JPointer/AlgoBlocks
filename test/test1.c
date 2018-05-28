@@ -4,7 +4,7 @@ int main(){
     int a;
 
     /* READ x =1, y=2, w=3, h=4, p=5; */
-    read(a);
+    read(b);
 
     /*
     IF x=1, y=2, w=3, h=4, p=5;
@@ -28,7 +28,7 @@ int main(){
     write(a);
 
     /* DECL x=1, y=2, w=3, h=4, p=5; */
-    int b = func(a) ;
+    int b = 1;
 
     /* WRITE x=1, y=2, w=3, h=4, p=5; */
     write (b ) ;

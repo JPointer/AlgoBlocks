@@ -56,14 +56,5 @@ public class Main {
             return;
         }
         treeToExecute.execute();
-//        System.out.println("Next step press 1 ");
-//
-//        while(true) {
-//            num = in.nextInt();
-//            if(num != 1)
-//                break;
-//            System.out.println(treeToExecute.nextStep());
-//        }
-
     }//to main
 }//to Main

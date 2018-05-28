@@ -15,6 +15,15 @@ public class Ast {
     private HashMap<String, Integer> funSignatures = new HashMap<>(); /*name of function and number of params*/
     private Scanner in = new Scanner(System.in);
     private Stack<Integer> returnVals = new Stack<>();
+    private int mode = 0; /*0 step by step, 1 execute all*/
+
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
+
+    public int getRetVal() {
+        return returnVals.pop();
+    }
 
     public Ast(Node root) {
         this.root = root;
@@ -81,6 +90,9 @@ public class Ast {
             for(Node n: stmts) {
                 if(n instanceof DeclarationStmt) {
                     ArrayList<String> temp = stack.pop();
+                    String name = ((DeclarationStmt) n).getVarName();
+                    if(temp.contains(name))
+                        throw new Exception("ERROR override " + name + " param");
                     temp.add(((DeclarationStmt) n).getVarName());
                     stack.push(temp);
                     validExpr(((DeclarationStmt) n).getExpr(), stack);
@@ -289,6 +301,7 @@ public class Ast {
         Stack<ArrayList<Variable>> stack = new Stack<>();
         enterBlock(((Program) root).getMainNode(), stack);
     }
+
     private void enterBlock(Node block, Stack<ArrayList<Variable>> stack) {
 
         if(block instanceof MainNode) {
@@ -297,10 +310,13 @@ public class Ast {
 
             BlockMeta meta = ((MainNode) block).getBlockMeta();
             System.out.println(enterMsg(meta));
-            nextStep();
+            if(mode == 0)
+                nextStep();
 
-            for(Node n: ((MainNode) block).getOperations())
-                enterBlock(n, stack);
+            ArrayList<Node> operations = ((MainNode) block).getOperations();
+            if(operations != null)
+                for(Node n: ((MainNode) block).getOperations())
+                    enterBlock(n, stack);
 
             enterBlock(((MainNode) block).getRetStmt(), stack);
             System.out.println(exitMsg(meta));
@@ -312,20 +328,24 @@ public class Ast {
             BlockMeta meta = ((AssignmentStmt) block).getBlockMeta();
 
             System.out.println(enterMsg(meta));
-            nextStep();
+            if(mode == 0)
+                nextStep();
             int a = calculateExpr(((AssignmentStmt) block).getExpr(), stack);
             updateVariable(stack, ((AssignmentStmt) block).getVarName(), a);
             System.out.println(new String (((AssignmentStmt) block).getVarName() + " = " + a));
-            nextStep();
+            if(mode == 0)
+                nextStep();
             System.out.println(exitMsg(meta));
-            nextStep();
+            if(mode == 0)
+                nextStep();
 
         } else if(block instanceof DeclarationStmt) {
 
             BlockMeta meta = ((DeclarationStmt) block).getBlockMeta();
 
             System.out.println(enterMsg(meta));
-            nextStep();
+            if(mode == 0)
+                nextStep();
 
             String name = ((DeclarationStmt) block).getVarName();
             Variable newVal = new Variable(name);
@@ -338,13 +358,15 @@ public class Ast {
                 System.out.println(new String(name + " = " + a));
                 newVal.setValue(a);
             }
-            nextStep();
+            if(mode == 0)
+                nextStep();
             //variable add to stack
             ArrayList<Variable> vars = stack.pop();
             vars.add(newVal);
             stack.push(vars);
             System.out.println(exitMsg(meta));
-            nextStep();
+            if(mode == 0)
+                nextStep();
 
         } else if(block instanceof IfStmt) {
 
@@ -353,49 +375,60 @@ public class Ast {
             BlockMeta trueMeta = ((IfStmt) block).getBlockMetaTrue();
 
             System.out.println(enterMsg(condition));
-            nextStep();
+            if(mode == 0)
+                nextStep();
             if(calculateExpr(((IfStmt) block).getCondition(),stack) == 1) {
                 System.out.println(enterMsg(trueMeta));
-                nextStep();
+                if(mode == 0)
+                    nextStep();
                 for(Node n: ((IfStmt) block).getTrueNodes())
                     enterBlock(n, stack);
                 System.out.println(exitMsg(trueMeta));
-                nextStep();
+                if(mode == 0)
+                    nextStep();
             } else {
                 System.out.println(enterMsg(falseMeta));
-                nextStep();
+                if(mode == 0)
+                    nextStep();
                 for(Node n: ((IfStmt) block).getFalseNodes())
                     enterBlock(n, stack);
                 System.out.println(exitMsg(falseMeta));
-                nextStep();
+                if(mode == 0)
+                    nextStep();
             }
             System.out.println(exitMsg(condition));
-            nextStep();
+            if(mode == 0)
+                nextStep();
 
         } else if(block instanceof ReadStmt) {
 
             BlockMeta meta = ((ReadStmt) block).getBlockMeta();
             System.out.println(enterMsg(meta));
-            nextStep();
+            if(mode == 0)
+                nextStep();
             String name = ((ReadStmt) block).getVarName();
             System.out.println("Give " + name + " value: " );
             int k = in.nextInt();
             updateVariable(stack, name, k);
             System.out.println(exitMsg(meta));
-            nextStep();
+            if(mode == 0)
+                nextStep();
 
         } else if(block instanceof ReturnStmt) {
 
             BlockMeta meta = ((ReturnStmt) block).getBlockMeta();
 
             System.out.println(enterMsg(meta));
-            nextStep();
+            if(mode == 0)
+                nextStep();
             int a = calculateExpr(((ReturnStmt) block).getRet(), stack);
             System.out.println("return value = " + a);
             returnVals.push(a);
-            nextStep();
+            if(mode == 0)
+                nextStep();
             System.out.println(exitMsg(meta));
-            nextStep();
+            if(mode == 0)
+                nextStep();
 
         } else if(block instanceof WhileStmt) {
 
@@ -407,39 +440,46 @@ public class Ast {
 
 
             System.out.println(enterMsg(whileMeta));
-            nextStep();
+            if(mode == 0)
+                nextStep();
             while(calculateExpr(condition,stack) == 1) {
                 System.out.println(enterMsg(whileOpMeta));
-                nextStep();
+                if(mode == 0)
+                    nextStep();
                 if(whileNodes != null)
                     for(Node n: whileNodes)
                         enterBlock(n, stack);
                 System.out.println(exitMsg(whileOpMeta));
-                nextStep();
+                if(mode == 0)
+                   nextStep();
             }
             System.out.println(exitMsg(whileMeta));
-            nextStep();
+            if(mode == 0)
+                nextStep();
 
         } else if(block instanceof WriteStmt) {
 
             BlockMeta meta = ((WriteStmt) block).getBlockMeta();
 
             System.out.println(enterMsg(meta));
-            nextStep();
+            if(mode == 0)
+                nextStep();
             ArrayList<Variable> variables = getVariablesByName(((WriteStmt) block).getVarNames(), stack);
 
             for(Variable v: variables)
                 System.out.println("Variable " + v.getName() + " = " + v.getValue());
-
-            nextStep();
+            if(mode == 0)
+                nextStep();
             System.out.println(exitMsg(meta));
-            nextStep();
+            if(mode == 0)
+                nextStep();
 
         } else if(block instanceof FunDef) {
             BlockMeta meta = ((FunDef) block).getBlockMeta();
 
             System.out.println(enterMsg(meta));
-            nextStep();
+            if(mode == 0)
+                nextStep();
             ArrayList<Node> operations = ((FunDef) block).getOperations();
             if(operations != null)
                 for(Node n: operations) {
@@ -447,7 +487,8 @@ public class Ast {
                 }
             enterBlock(((FunDef) block).getRetStmt(), stack);
             System.out.println(exitMsg(meta));
-            nextStep();
+            if(mode == 0)
+               nextStep();
         }
     }// enter block
 
@@ -691,4 +732,5 @@ public class Ast {
         }
         return returnVals.pop();
     }
+
 }// AST
