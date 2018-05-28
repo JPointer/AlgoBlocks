@@ -14,6 +14,7 @@ public class Ast {
     private Node root;
     private HashMap<String, Integer> funSignatures = new HashMap<>(); /*name of function and number of params*/
     private Scanner in = new Scanner(System.in);
+    private Stack<Integer> returnVals = new Stack<>();
 
     public Ast(Node root) {
         this.root = root;
@@ -389,7 +390,9 @@ public class Ast {
 
             System.out.println(enterMsg(meta));
             nextStep();
-            System.out.println("return value = " + calculateExpr(((ReturnStmt) block).getRet(), stack));
+            int a = calculateExpr(((ReturnStmt) block).getRet(), stack);
+            System.out.println("return value = " + a);
+            returnVals.push(a);
             nextStep();
             System.out.println(exitMsg(meta));
             nextStep();
@@ -433,7 +436,18 @@ public class Ast {
             nextStep();
 
         } else if(block instanceof FunDef) {
-            //TODO
+            BlockMeta meta = ((FunDef) block).getBlockMeta();
+
+            System.out.println(enterMsg(meta));
+            nextStep();
+            ArrayList<Node> operations = ((FunDef) block).getOperations();
+            if(operations != null)
+                for(Node n: operations) {
+                    enterBlock(n, stack);
+                }
+            enterBlock(((FunDef) block).getRetStmt(), stack);
+            System.out.println(exitMsg(meta));
+            nextStep();
         }
     }// enter block
 
@@ -534,7 +548,17 @@ public class Ast {
             return result;
 
         } else if(node instanceof FuncCallAtom) {
-            return 0; //TODO call function
+            ArrayList<Node> nodes = ((FuncCallAtom) node).getParams();
+            String funName = ((FuncCallAtom) node).getFuncName();
+
+            ArrayList<Integer> values = new ArrayList<Integer>();
+
+            if(nodes != null)
+                for(Node n: nodes) {
+                    values.add(calculateExpr(n, stack));
+                }
+
+            return executeFinction(funName, values, stack); //TODO call function
 
         } else if(node instanceof NameAtom) {
 
@@ -647,5 +671,24 @@ public class Ast {
             }
         }
         return variables;
+    }
+
+    private Integer executeFinction(String funName, ArrayList<Integer> values, Stack<ArrayList<Variable>> stack) {
+        ArrayList<? extends Node> funDef = ((Program) root).getFunDefs();
+        ArrayList<Variable> variables = new ArrayList<>();
+        if(funDef != null) {
+            for(Node n: funDef)
+                if(((FunDef) n).getName().equals(funName)) {
+                    int i =0;
+                    for(String str: ((FunDef) n).getParams()) {
+                        variables.add(new Variable(str, values.get(i++)));
+                    }
+                    stack.push(variables);
+                    enterBlock(n, stack);
+                    stack.pop();
+                    break;
+                }
+        }
+        return returnVals.pop();
     }
 }// AST
