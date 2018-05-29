@@ -15,7 +15,7 @@ public class Main {
     public static void main(String[] strs) {
         CharStream stream = null;
         try{
-            stream =new ANTLRFileStream("test/test8.c");
+            stream =new ANTLRFileStream("test/test9.c");
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -40,7 +40,8 @@ public class Main {
         ParseTreeWalker.DEFAULT.walk(programListener, tree);
 
         Ast treeToExecute = programListener.getAst();
-
+        // to print AST tree
+        //System.out.println(treeToExecute.toString());
         Scanner in = new Scanner(System.in);
         int num = 1;
         System.out.println("Start executing press 1");
